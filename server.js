@@ -18,7 +18,6 @@ app.use(express.json());
 
 
 // --- Database Connection ---
-// This defines the `pool` variable correctly at the top level
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // This uses the single URL from Render's environment variables
   ssl: {
@@ -28,7 +27,6 @@ const pool = new Pool({
 
 
 // --- Static Frontend Serving ---
-// This serves your index.html and any other frontend files (like css or images)
 app.use(express.static(path.join(__dirname, 'frontend')));
 
 
@@ -36,12 +34,10 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
 
-// Helper function to create a JWT
 function makeToken(user) {
   return jwt.sign({ id: user.id, email: user.email, display_name: user.display_name }, JWT_SECRET, { expiresIn: '7d' });
 }
 
-// Middleware to verify JWT
 async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -179,7 +175,6 @@ app.post('/api/groups/:id/join', authMiddleware, async (req, res) => {
     const groupId = parseInt(req.params.id);
     if (isNaN(groupId)) return res.status(400).json({ error: 'Invalid group ID' });
     
-    // All database operations for a single request should ideally be in a transaction
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
@@ -292,8 +287,9 @@ app.get('/api/test', (req, res) => {
 
 
 // --- Frontend Catch-all ---
-// This must be the LAST route so it doesn't interfere with API routes
-app.get('*', (req, res) => {
+// This must be the LAST route so it doesn't interfere with API routes.
+// It uses /* which is the correct syntax for a catch-all route in modern Express.
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
