@@ -295,9 +295,10 @@ app.get('/api/test', (req, res) => {
 });
 
 // Frontend Catch-all (FIXED WILDCARD)
-app.get('/:any(*)', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
+
 
 // Server Start
 const PORT = process.env.PORT || 4000;
