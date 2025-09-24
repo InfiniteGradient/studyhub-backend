@@ -4,23 +4,32 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const mysql = require('mysql2/promise');
-
+// const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const pool = mysql.createPool({
+// const pool = mysql.createPool({
+//   host: process.env.DB_HOST || '127.0.0.1',
+//   port: +process.env.DB_PORT || 3306,
+//   user: process.env.DB_USER || 'root',
+//   password: process.env.DB_PASS || '',
+//   database: process.env.DB_NAME || 'studyhub',
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0
+// });
+const { Pool } = require('pg');
+
+const pool = new Pool({
   host: process.env.DB_HOST || '127.0.0.1',
-  port: +process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
+  port: +process.env.DB_PORT || 5432,
+  user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASS || '',
   database: process.env.DB_NAME || 'studyhub',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
-
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
 
 // helper
