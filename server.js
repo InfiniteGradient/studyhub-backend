@@ -9,7 +9,7 @@ const path = require('path');
 // --- App & Middleware Setup ---
 const app = express();
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'; // your frontend
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const corsOptions = {
   origin: FRONTEND_URL,
   optionsSuccessStatus: 200,
@@ -69,7 +69,7 @@ app.post('/api/register', async (req, res) => {
     if (existResult.rows.length > 0) {
       return res.status(409).json({ error: 'Email already in use' });
     }
-    const hash = await bcrypt.hash(password, 12); // more secure
+    const hash = await bcrypt.hash(password, 12);
     const result = await pool.query(
       'INSERT INTO users (email, password_hash, display_name) VALUES ($1, $2, $3) RETURNING id, email, display_name',
       [email, hash, display_name]
@@ -209,7 +209,7 @@ app.post('/api/groups/:id/join', authMiddleware, async (req, res) => {
   }
 });
 
-// Match endpoint (cleaned)
+// Match endpoint
 app.get('/api/match', authMiddleware, async (req, res) => {
   const { subject_id, level, type } = req.query;
   try {
@@ -294,8 +294,8 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'API is working!' });
 });
 
-// Frontend Catch-all
-app.get('*', (req, res) => {
+// Frontend Catch-all (FIXED WILDCARD)
+app.get('/:any(*)', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
