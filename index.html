@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>StudyHub — Stylish UI</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#0f1724; --bg2:#0b1220;
+    --glass: rgba(255,255,255,0.06);
+    --accent: linear-gradient(90deg,#7c3aed,#06b6d4);
+    --muted: rgba(255,255,255,0.6);
+    --glass-2: rgba(255,255,255,0.03);
+    --success: #10b981; --danger:#ef4444;
+    --card-radius: 16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%; margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:radial-gradient(800px 400px at 10% 10%, rgba(99,102,241,0.12), transparent), linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%); color:#e6eef8; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+  .app{max-width:1100px;margin:28px auto;padding:28px;display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start}
+  header{grid-column:1/3;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{display:flex;gap:12px;align-items:center}
+  .logo .badge{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:22px;box-shadow:0 6px 30px rgba(12,18,40,0.6);transform:translateY(-2px)}
+  h1{margin:0;font-size:20px;letter-spacing:-0.2px}
+  p.lead{margin:0;color:var(--muted);font-size:13px}
+
+  /* left column (controls) */
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px;border-radius:var(--card-radius);backdrop-filter: blur(8px);box-shadow: 0 6px 30px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.03)}
+  .section-title{font-size:13px;color:var(--muted);margin-bottom:10px}
+  label{display:block;font-size:13px;margin:8px 0 6px;color:#cfe8ff}
+  input[type=text], input[type=password], select, textarea{
+    width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:inherit;outline:none;transition:box-shadow .18s, transform .12s;
+  }
+  input:focus, select:focus, textarea:focus{box-shadow:0 6px 20px rgba(2,6,23,0.5); transform:translateY(-1px);border-color:rgba(124,58,237,0.35)}
+  button.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border: none;cursor:pointer;background:var(--accent);color:white;font-weight:600;box-shadow:0 10px 30px rgba(99,102,241,0.12);transition:transform .12s, box-shadow .12s}
+  button.btn:active{transform:translateY(1px)}
+  button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 12px}
+  .muted{color:var(--muted);font-size:13px}
+
+  /* right column results */
+  .board{display:grid;grid-template-rows:auto 1fr;gap:18px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .card{background:linear-gradient(180deg,var(--glass), var(--glass-2));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);transition:transform .16s, box-shadow .16s}
+  .card:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(2,6,23,0.6)}
+  .card h3{margin:0;font-size:16px}
+  .meta{font-size:12px;color:var(--muted);margin-top:6px}
+  .desc{font-size:13px;margin-top:10px;color:#dbeefd}
+  .tiny{font-size:12px;color:var(--muted)}
+
+  /* fancy animated badges */
+  .pulse {position:relative}
+  .pulse::after{content:'';position:absolute;inset:-6px;border-radius:inherit;background:linear-gradient(90deg,#7c3aed55,#06b6d455);filter:blur(8px);opacity:0;animation:pulse 2.8s infinite}
+  @keyframes pulse{0%{opacity:0;transform:scale(.96)}50%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.04)}}
+
+  /* search & controls row */
+  .controls{display:flex;gap:10px;align-items:center}
+  .controls select, .controls button{height:40px}
+  .small{padding:8px 10px;border-radius:10px}
+
+  /* toast */
+  .toast{position:fixed;right:22px;bottom:22px;background:rgba(6,8,20,0.9);padding:12px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(2,6,23,0.5);font-weight:600}
+
+  /* responsive */
+  @media (max-width:980px){.app{grid-template-columns:1fr; padding:18px} header{grid-column:1/2} .logo .badge{width:44px;height:44px}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div class="logo">
+      <div class="badge">SH</div>
+      <div>
+        <h1>StudyHub</h1>
+        <p class="lead">Find focused study groups. Minimal friction — maximum nerd energy.</p>
+      </div>
+    </div>
+
+    <div id="userBox" class="muted">
+      <div id="userInfo"><span class="tiny">Not signed in</span></div>
+    </div>
+  </header>
+
+  <!-- LEFT: auth + create -->
+  <aside>
+    <div class="panel" id="authPanel">
+      <div class="section-title">Account</div>
+
+      <label>Display name</label>
+      <input id="reg_name" type="text" placeholder="e.g. Aman K" />
+
+      <label>Email</label>
+      <input id="reg_email" type="text" placeholder="you@example.com" />
+
+      <label>Password</label>
+      <input id="reg_pass" type="password" placeholder="strong password" />
+
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" id="btnRegister">Create account</button>
+        <button class="secondary" id="btnFillDemo">Fill demo</button>
+      </div>
+
+      <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,0.03)">
+
+      <label class="muted">Already have account</label>
+      <input id="log_email" type="text" placeholder="email" />
+      <input id="log_pass" type="password" placeholder="password" style="margin-top:6px" />
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" id="btnLogin">Sign in</button>
+        <button class="secondary" id="btnLogout" style="display:none">Logout</button>
+      </div>
+    </div>
+
+    <div style="height:14px"></div>
+
+    <div class="panel" id="createPanel">
+      <div class="section-title">Create group</div>
+      <label>Title</label>
+      <input id="group_title" type="text" placeholder="Algorithms practice" />
+      <label>Subject</label>
+      <select id="group_subject"></select>
+      <label>Level</label>
+      <select id="group_level">
+        <option value="mixed">mixed</option>
+        <option value="beginner">beginner</option>
+        <option value="intermediate">intermediate</option>
+        <option value="advanced">advanced</option>
+      </select>
+      <label>Max members</label>
+      <input id="group_max" type="text" value="6" />
+      <label>Description</label>
+      <textarea id="group_description" rows="3" style="resize:none" placeholder="What will you do in this group?"></textarea>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" id="btnCreateGroup">Create</button>
+        <button class="secondary" id="btnClear">Clear</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Search + results -->
+  <main class="board">
+    <div class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div class="section-title">Find study partners / groups</div>
+          <div class="muted">Search by subject and level — then join in.</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div class="controls">
+            <select id="search_type" class="small">
+              <option value="group">Groups</option>
+              <option value="user">Users</option>
+            </select>
+            <select id="search_subject" class="small"></select>
+            <select id="search_level" class="small">
+              <option value="">any</option>
+              <option value="beginner">beginner</option>
+              <option value="intermediate">intermediate</option>
+              <option value="advanced">advanced</option>
+            </select>
+            <button id="btnSearch" class="btn">Search</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultsArea" class="panel">
+      <div id="resultsHeader" style="display:flex;align-items:center;justify-content:space-between">
+        <div><strong id="resultsCount">—</strong> results</div>
+        <div class="tiny muted">Fast matching — no nonsense</div>
+      </div>
+
+      <div style="height:10px"></div>
+      <div id="results" class="cards"></div>
+    </div>
+  </main>
+</div>
+
+<!-- toast -->
+<div id="toast" style="display:none" class="toast"></div>
+
+<script>
+/*
+  Stylish single-file frontend.
+  Update API variable below if your backend uses a different host/port.
+*/
+const API = 'http://localhost:4000/api';
+
+const $ = id => document.getElementById(id);
+const toast = (txt, kind='info') => {
+  const t = $('toast');
+  t.style.display = 'block';
+  t.style.borderColor = kind==='error' ? 'rgba(239,68,68,0.2)' : kind==='success' ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.03)';
+  t.innerHTML = txt;
+  setTimeout(()=> t.style.display='none', 3000);
+};
+
+// local state
+let token = localStorage.getItem('sh_token') || '';
+let user = JSON.parse(localStorage.getItem('sh_user') || 'null');
+
+function setAuth(u, t){
+  user = u; token = t;
+  if (u) {
+    localStorage.setItem('sh_user', JSON.stringify(u));
+    localStorage.setItem('sh_token', t);
+    $('userInfo').innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700">${u.display_name[0]?.toUpperCase()}</div><div style="font-size:13px"><strong>${u.display_name}</strong><div class="tiny muted">${u.email}</div></div></div>`;
+    $('btnLogout').style.display='inline-block';
+  } else {
+    localStorage.removeItem('sh_user'); localStorage.removeItem('sh_token');
+    $('userInfo').innerHTML = `<span class="tiny">Not signed in</span>`;
+    $('btnLogout').style.display='none';
+  }
+}
+
+function authHeaders() {
+  return { 'Content-Type':'application/json', 'Authorization': 'Bearer ' + token };
+}
+
+/* bootstrap subjects */
+async function loadSubjects(){
+  try {
+    const resp = await fetch(API + '/subjects');
+    const subs = await resp.json();
+    const sg = $('group_subject'); const ss = $('search_subject');
+    sg.innerHTML = ''; ss.innerHTML = '';
+    subs.forEach(s => {
+      const o = document.createElement('option'); o.value = s.id; o.textContent = s.name;
+      sg.appendChild(o);
+      const o2 = o.cloneNode(true); ss.appendChild(o2);
+    });
+  } catch (e) {
+    toast('Failed to load subjects — is backend running?', 'error');
+  }
+}
+
+/* register */
+$('btnFillDemo').addEventListener('click', ()=> {
+  $('reg_name').value = 'DemoUser'; $('reg_email').value = `demo${Math.floor(Math.random()*999)}@example.com`; $('reg_pass').value='123456';
+});
+
+$('btnRegister').addEventListener('click', async ()=>{
+  const display_name = $('reg_name').value.trim();
+  const email = $('reg_email').value.trim();
+  const password = $('reg_pass').value;
+  if (!display_name || !email || !password) return toast('Fill name, email and password', 'error');
+  try {
+    const r = await fetch(API + '/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({display_name, email, password})});
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || JSON.stringify(j), 'error');
+    setAuth(j.user, j.token);
+    toast('Account created — welcome, ' + j.user.display_name, 'success');
+  } catch (e) { toast('Register failed', 'error'); }
+});
+
+/* login */
+$('btnLogin').addEventListener('click', async ()=>{
+  const email = $('log_email').value.trim();
+  const password = $('log_pass').value;
+  if (!email || !password) return toast('Enter email and password', 'error');
+  try {
+    const r = await fetch(API + '/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password})});
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || JSON.stringify(j), 'error');
+    setAuth(j.user, j.token);
+    toast('Signed in — ' + j.user.display_name, 'success');
+  } catch (e) { toast('Login failed', 'error'); }
+});
+
+/* logout */
+$('btnLogout').addEventListener('click', ()=> { setAuth(null, ''); toast('Logged out', 'info'); });
+
+/* create group */
+$('btnCreateGroup').addEventListener('click', async ()=>{
+  if (!token) return toast('Sign in first', 'error');
+  const payload = {
+    title: $('group_title').value.trim(),
+    subject_id: parseInt($('group_subject').value),
+    description: $('group_description').value.trim(),
+    level: $('group_level').value,
+    max_members: parseInt($('group_max').value) || 6
+  };
+  if (!payload.title) return toast('Give the group a title', 'error');
+  try {
+    const r = await fetch(API + '/groups', {method:'POST', headers: authHeaders(), body: JSON.stringify(payload)});
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || JSON.stringify(j), 'error');
+    toast('Group created', 'success');
+    $('group_title').value=''; $('group_description').value='';
+  } catch(e){ toast('Create failed', 'error'); }
+});
+
+/* search */
+$('btnSearch').addEventListener('click', async ()=>{
+  if (!token) return toast('Sign in first', 'error');
+  const type = $('search_type').value;
+  const subject_id = $('search_subject').value;
+  const level = $('search_level').value;
+  const q = new URLSearchParams({ subject_id, level, type });
+  try {
+    const r = await fetch(API + '/match?' + q.toString(), { headers: authHeaders() });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || JSON.stringify(j), 'error');
+    renderResults(j, type);
+  } catch(e){ toast('Search failed', 'error'); }
+});
+
+/* render results */
+function renderResults(rows, type){
+  const container = $('results');
+  container.innerHTML = '';
+  $('resultsCount').innerText = rows.length;
+  if (!rows.length) {
+    const empty = document.createElement('div'); empty.className='card'; empty.innerHTML = '<div class="muted">No results. Try another subject or level.</div>'; container.appendChild(empty); return;
+  }
+  rows.forEach(r => {
+    const c = document.createElement('div'); c.className='card pulse';
+    if (type === 'group') {
+      c.innerHTML = `<h3>${escapeHtml(r.title)}</h3>
+        <div class="meta">${escapeHtml(r.subject_name || '')} • ${escapeHtml(r.level || 'mixed')}</div>
+        <div class="desc">${escapeHtml(r.description || '')}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <div class="tiny muted">${r.member_count || 0} members • owner: ${escapeHtml(r.owner_name || '')}</div>
+          <div><button class="btn" data-join="${r.id}">Join</button></div>
+        </div>`;
+      container.appendChild(c);
+      c.querySelector('[data-join]').addEventListener('click', ()=> joinGroup(r.id));
+    } else {
+      c.innerHTML = `<h3>${escapeHtml(r.display_name)}</h3>
+        <div class="meta">${escapeHtml(r.subject_name || '')} • ${escapeHtml(r.level)}</div>
+        <div class="desc">${escapeHtml(r.bio || 'No bio')}</div>`;
+      container.appendChild(c);
+    }
+  });
+}
+
+/* join group */
+async function joinGroup(id){
+  if (!token) return toast('Sign in first', 'error');
+  try {
+    const r = await fetch(API + '/groups/' + id + '/join', { method:'POST', headers: authHeaders() });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || JSON.stringify(j), 'error');
+    toast('Joined group', 'success');
+    // refresh results if any
+    $('btnSearch').click();
+  } catch(e){ toast('Join failed', 'error'); }
+}
+
+/* small utility */
+function escapeHtml(s){ if (!s) return ''; return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]); }
+
+/* initial */
+setAuth(user, token);
+loadSubjects();
+
+// auto-search first subject groups (optional)
+setTimeout(()=>{ if ($('search_subject').value) $('btnSearch').click(); }, 400);
+
+</script>
+</body>
+</html>
