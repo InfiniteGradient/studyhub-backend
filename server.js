@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const mysql = require('mysql2/promise');
 const { Pool } = require('pg');
+const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -29,6 +30,15 @@ const pool = new Pool({
   password: process.env.DB_PASS || '',
   database: process.env.DB_NAME || 'studyhub',
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+
+// Serve static files from frontend folder
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// Main route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
 
 // Serve static files from frontend folder and root
