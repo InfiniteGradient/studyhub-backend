@@ -30,6 +30,15 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'studyhub',
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
+
+// Serve static files from frontend folder and root
+app.use(express.static('frontend'));
+app.use(express.static('.'));
+
+// Serve index.html for root route
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
 
 // helper
