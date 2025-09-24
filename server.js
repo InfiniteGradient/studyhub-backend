@@ -20,7 +20,7 @@ app.use(express.json());
 //   connectionLimit: 10,
 //   queueLimit: 0
 // });
-const { Pool } = require('pg');
+
 
 const pool = new Pool({
   host: process.env.DB_HOST || '127.0.0.1',
