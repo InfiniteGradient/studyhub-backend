@@ -1,342 +1,267 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyHub — Cute & Light</title>
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>StudyHub — Neobrutalist UI</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f7fbff;
-  --card: #ffffff;
-  --muted: #7b8ba6;
-  --accent-1: #ffd6e0;
-  --accent-2: #cdeffd;
-  --accent-3: #fff0b8;
-  --accent-grad: linear-gradient(135deg,var(--accent-1),var(--accent-2));
-  --glass: rgba(255,255,255,0.8);
-  --radius: 18px;
-  --shadow-sm: 0 6px 18px rgba(23,40,80,0.06);
-  --shadow-md: 0 18px 40px rgba(23,40,80,0.08);
-  --success: #2fbf71;
-  --danger: #ff6b6b;
-  --line: #e6eef8;
-  --ui-gap: 18px;
-  --transition: all 0.3s ease;
-}
+  :root {
+    --background: #f4f4f4;
+    --foreground: #111111;
+    --accent: #32ff7a;
+    --muted: #555555;
+    --border-width: 2px;
+    --radius: 8px;
+    --shadow-offset: 6px;
+  }
 
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Poppins, system-ui, -apple-system, sans-serif;
-  background: linear-gradient(180deg,#f8fdff,#eef7ff 60%);
-  color: #213047;
-  -webkit-font-smoothing: antialiased;
-}
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-a { color: inherit; text-decoration: none; }
+  html { height: 100%; }
+  
+  body {
+    min-height: 100%;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-.wrap {
-  max-width: 1100px;
-  margin: 28px auto;
-  padding: 24px;
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: var(--ui-gap);
-  align-items: start;
-}
+  /* --- Layout --- */
+  .app {
+    max-width: 1100px;
+    margin: 28px auto;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
 
-/* Header */
-header {
-  grid-column: 1 / 3;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  animation: fadeIn 0.8s ease;
-}
-.brand {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.logo {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: linear-gradient(135deg,#fff7fa,#ffeef7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--line);
-}
-.logo svg { width: 40px; height: 40px; }
-h1 { margin: 0; font-size: 20px; letter-spacing: -0.2px; }
-p.lead { margin: 0; color: var(--muted); font-size: 13px; }
+  /* --- Header --- */
+  header {
+    grid-column: 1 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .logo { display: flex; gap: 16px; align-items: center; }
+  .logo .badge {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius);
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: var(--foreground);
+    font-size: 22px;
+    border: var(--border-width) solid var(--foreground);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--foreground);
+  }
 
-/* Aside (forms) */
-aside { display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-size: 24px; font-weight: 800; }
+  p.lead { color: var(--muted); font-size: 14px; font-family: 'IBM Plex Mono', monospace; }
 
-.card {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--line);
-  transition: var(--transition);
-  animation: fadeIn 0.6s ease;
-}
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
+  /* --- Panels & Cards (Neobrutalist Style) --- */
+  .panel {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius);
+    border: var(--border-width) solid var(--foreground);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--foreground);
+    transition: box-shadow 0.1s ease-in-out;
+  }
+  
+  .card {
+    background: white;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: var(--border-width) solid var(--foreground);
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--foreground);
+  }
 
-.section-title {
-  font-size: 12px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  margin-bottom: 10px;
-}
+  .card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: calc(var(--shadow-offset) + 3px) calc(var(--shadow-offset) + 3px) 0px var(--foreground);
+  }
+  
+  .card h3 { margin-bottom: 6px; font-size: 18px; font-weight: 800; }
+  .meta { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); text-transform: uppercase;}
+  .desc { font-size: 14px; margin-top: 12px; color: var(--foreground); line-height: 1.6; }
+  
+  /* --- Forms & Controls --- */
+  .section-title { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--muted); margin-bottom: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+  label { display: block; font-size: 14px; margin: 16px 0 8px; font-weight: bold; }
 
-label { display: block; font-size: 13px; margin: 8px 0 6px; color: #2b3b53; }
-input[type=text], input[type=password], select, textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: linear-gradient(180deg, #ffffff, #fbfdff);
-  color: inherit;
-  font-size: 14px;
-  outline: none;
-  transition: 0.2s;
-}
-input:focus, select:focus, textarea:focus { box-shadow: 0 10px 28px rgba(32,64,120,0.06); transform: translateY(-1px); border-color: #cfe9ff; }
-input::placeholder, textarea::placeholder { color: #aab8cc; }
+  input[type=text], input[type=password], select, textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: var(--radius);
+    border: var(--border-width) solid var(--foreground);
+    background: var(--background);
+    color: inherit;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+  }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: var(--accent-grad);
-  font-weight: 600;
-  color: #213047;
-  box-shadow: 0 10px 26px rgba(50,86,122,0.06);
-  transition: var(--transition);
-}
-.btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.btn:active { transform: translateY(1px); }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  
+  button.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    border: var(--border-width) solid var(--foreground);
+    cursor: pointer;
+    background: var(--accent);
+    color: var(--foreground);
+    font-weight: 800;
+    font-family: inherit;
+    font-size: 14px;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--foreground);
+    transition: all 0.1s ease-in-out;
+  }
+  
+  button.btn:hover { transform: translate(-2px, -2px); box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0px var(--foreground); }
+  button.btn:active { transform: translate(var(--shadow-offset), var(--shadow-offset)); box-shadow: none; }
 
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--line);
-  color: #2b3b53;
-  padding: 9px 12px;
-  border-radius: 10px;
-}
+  button.secondary { background: white; }
+  .muted { color: var(--muted); font-size: 13px; }
 
-.muted { color: var(--muted); font-size: 13px; }
+  /* --- Right Column --- */
+  .board { display: grid; grid-template-rows: auto 1fr; gap: 32px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+  .tiny { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); }
 
-/* Main content */
-main { display: flex; flex-direction: column; gap: 14px; }
+  /* --- Toast Notification --- */
+  .toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    background: var(--foreground);
+    color: var(--background);
+    padding: 14px 20px;
+    border-radius: var(--radius);
+    font-weight: bold;
+    font-family: 'IBM Plex Mono', monospace;
+  }
 
-.search-row { display: flex; align-items: center; gap: 12px; }
-.search {
-  flex: 1;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  background: linear-gradient(90deg,#fff,#fbfeff);
-  padding: 8px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-}
-.search input { border: none; padding: 8px 10px; background: transparent; font-size: 14px; outline: none; }
-
-.controls select { height: 44px; border-radius: 10px; border: 1px solid var(--line); padding: 8px 10px; background: white; }
-
-.cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 16px; }
-
-.group-card {
-  padding: 14px;
-  border-radius: 14px;
-  background: linear-gradient(180deg,#ffffff,#fffdfb);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--line);
-  transition: var(--transition);
-  animation: fadeInUp 0.6s ease;
-}
-.group-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); }
-
-.top-row { display: flex; align-items: center; gap: 12px; }
-.avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  background: linear-gradient(135deg,#ffeef7,#ffd6e0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #5a3750;
-  font-size: 18px;
-  box-shadow: 0 8px 18px rgba(89,80,110,0.06);
-}
-h3 { margin: 0; font-size: 16px; }
-.meta { font-size: 12px; color: var(--muted); margin-top: 6px; }
-.desc { margin-top: 10px; font-size: 13px; color: #2b3b53; line-height: 1.3; }
-.footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-.pill { background: #fff7ec; border-radius: 999px; padding: 6px 10px; font-weight: 700; font-size: 13px; color: #7b5a2b; border: 1px solid #fff1d6; }
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 36px;
-  border-radius: 14px;
-  background: linear-gradient(180deg,#ffffff,#fbfeff);
-  border: 1px dashed #e8f4ff;
-  color: var(--muted);
-  animation: fadeIn 0.6s ease;
-}
-.empty svg { width: 110px; height: 110px; margin-bottom: 12px; opacity: .95; }
-
-.toast {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: linear-gradient(180deg,#ffffff,#f7faff);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--line);
-  font-weight: 600;
-  animation: fadeIn 0.5s ease;
-}
-
-/* Animations */
-@keyframes fadeIn { from {opacity:0} to {opacity:1} }
-@keyframes fadeInUp { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
-
-@media (max-width:980px){
-  .wrap { grid-template-columns:1fr; padding:16px; }
-  .logo { width: 56px; height: 56px; }
-  .avatar { width: 44px; height: 44px; }
-}
+  /* --- Responsive --- */
+  @media (max-width: 980px) {
+    .app { grid-template-columns: 1fr; padding: 18px; gap: 24px; }
+    header { grid-column: 1 / 2; flex-direction: column; align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap" id="app">
-  <!-- Header -->
+<div class="app" id="app">
   <header>
-    <div class="brand">
-      <div class="logo" aria-hidden="true">
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="8" y="14" width="48" height="36" rx="8" fill="#fff3f8" stroke="#ffe1ee" stroke-width="1.5"/>
-          <path d="M22 20h20" stroke="#ffd6e0" stroke-width="2" stroke-linecap="round"/>
-          <path d="M22 28h20" stroke="#ffd6e0" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="46" cy="18" r="4" fill="#fff7c9" stroke="#fff2a8" stroke-width="1"/>
-        </svg>
-      </div>
+    <div class="logo">
+      <div class="badge">SH</div>
       <div>
-        <h1>StudyHub — Cute & Light</h1>
-        <p class="lead">Find small, friendly study groups. Soft vibes, sharp minds.</p>
+        <h1>StudyHub</h1>
+        <p class="lead">Find focused study groups.</p>
       </div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <div id="userInfo" class="tiny muted">Not signed in</div>
-      <button id="btnFillDemo" class="btn-ghost">Demo</button>
+
+    <div id="userBox" class="muted">
+      <div id="userInfo"><span class="tiny">Not signed in</span></div>
     </div>
   </header>
 
-  <!-- Aside: Auth & Create -->
   <aside>
-    <div class="card" id="authPanel">
-      <div class="section-title">Account</div>
+    <div class="panel" id="authPanel">
+      <div class="section-title">Account Access</div>
       <label>Display name</label>
-      <input id="reg_name" placeholder="e.g. Aman K" type="text"/>
+      <input id="reg_name" type="text" placeholder="e.g. Aman K" />
       <label>Email</label>
-      <input id="reg_email" placeholder="you@example.com" type="text"/>
+      <input id="reg_email" type="text" placeholder="you@example.com" />
       <label>Password</label>
-      <input id="reg_pass" placeholder="strong password" type="password"/>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button id="btnRegister" class="btn">Create account</button>
-        <button id="btnLogin" class="btn-ghost">Sign in</button>
+      <input id="reg_pass" type="password" placeholder="••••••••" />
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn" id="btnRegister">Create Account</button>
+        <button class="btn secondary" id="btnFillDemo">Demo</button>
       </div>
-      <hr class="sep">
-      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
-        <div class="tiny muted">Already signed in?</div>
-        <button id="btnLogout" class="btn-ghost" style="display:none">Logout</button>
+      <hr style="margin:24px 0;border:0;border-top:var(--border-width) solid var(--foreground)">
+      <label class="muted">Already have an account?</label>
+      <input id="log_email" type="text" placeholder="Email" />
+      <input id="log_pass" type="password" placeholder="Password" style="margin-top:8px" />
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn" id="btnLogin">Sign In</button>
+        <button class="btn secondary" id="btnLogout" style="display:none">Logout</button>
       </div>
     </div>
-
-    <div class="card" id="createPanel">
-      <div class="section-title">Create a study group</div>
+    <div style="height:14px"></div>
+    <div class="panel" id="createPanel">
+      <div class="section-title">Create New Group</div>
       <label>Title</label>
-      <input id="group_title" placeholder="Algorithms practice" type="text"/>
+      <input id="group_title" type="text" placeholder="Algorithms Practice" />
       <label>Subject</label>
       <select id="group_subject"></select>
       <label>Level</label>
       <select id="group_level">
-        <option value="mixed">mixed</option>
-        <option value="beginner">beginner</option>
-        <option value="intermediate">intermediate</option>
-        <option value="advanced">advanced</option>
+        <option value="mixed">Mixed</option>
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
       </select>
-      <label>Max members</label>
-      <input id="group_max" value="6" type="text"/>
+      <label>Max Members</label>
+      <input id="group_max" type="text" value="6" />
       <label>Description</label>
-      <textarea id="group_description" rows="3" style="resize:none" placeholder="What will you do in this group?"></textarea>
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button id="btnCreateGroup" class="btn">Create</button>
-        <button id="btnClear" class="btn-ghost">Clear</button>
+      <textarea id="group_description" rows="3" style="resize:none" placeholder="Let's crush some LeetCode problems..."></textarea>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn" id="btnCreateGroup">Create</button>
+        <button class="btn secondary" id="btnClear">Clear</button>
       </div>
     </div>
   </aside>
 
-  <!-- Main: Search & Results -->
-  <main>
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+  <main class="board">
+    <div class="panel">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;">
         <div>
-          <div class="section-title">Find study partners</div>
-          <div class="tiny muted">Search by subject, level or keywords.</div>
+          <div class="section-title">Find Groups</div>
+          <p class="muted" style="font-size:14px">Filter by subject and level to find your partners.</p>
         </div>
-        <div class="search-row">
-          <div class="search">
-            <select id="search_type">
-              <option value="group">Groups</option>
-              <option value="user">Users</option>
-            </select>
-            <input id="search_text" placeholder="topic, title, or keyword..." />
-            <select id="search_subject"></select>
-            <select id="search_level">
-              <option value="">any</option>
-              <option value="beginner">beginner</option>
-              <option value="intermediate">intermediate</option>
-              <option value="advanced">advanced</option>
-            </select>
-          </div>
+        <div class="controls" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <select id="search_type"><option value="group">Groups</option><option value="user">Users</option></select>
+          <select id="search_subject"></select>
+          <select id="search_level">
+            <option value="">Any Level</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
           <button id="btnSearch" class="btn">Search</button>
         </div>
       </div>
     </div>
 
-    <div id="resultsArea" class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div><strong id="resultsCount">—</strong> results</div>
-        <div class="tiny muted">gentle matching • fast results</div>
+    <div id="resultsArea" class="panel">
+      <div id="resultsHeader" style="display:flex;align-items:center;justify-content:space-between; margin-bottom: 20px;">
+        <div><strong id="resultsCount" style="font-size: 1.2em;">—</strong> results</div>
+        <div class="tiny">MATCHED</div>
       </div>
-      <div style="height:12px"></div>
       <div id="results" class="cards"></div>
     </div>
   </main>
@@ -345,8 +270,172 @@ h3 { margin: 0; font-size: 16px; }
 <div id="toast" style="display:none" class="toast"></div>
 
 <script>
-/* JavaScript logic remains identical to previous version */
-/* You can copy the JS from previous version for auth, search, create, join, toast etc. */
+/*
+  Neobrutalist single-file frontend.
+  Functionality remains the same. Aesthetics are completely different.
+*/
+const API = 'http://localhost:4000/api';
+
+const $ = id => document.getElementById(id);
+const toast = (txt) => {
+  const t = $('toast');
+  t.style.display = 'block';
+  t.innerHTML = txt;
+  setTimeout(() => t.style.display = 'none', 3000);
+};
+
+// local state
+let token = localStorage.getItem('sh_token') || '';
+let user = JSON.parse(localStorage.getItem('sh_user') || 'null');
+
+function setAuth(u, t) {
+  user = u; token = t;
+  if (u) {
+    localStorage.setItem('sh_user', JSON.stringify(u));
+    localStorage.setItem('sh_token', t);
+    $('userInfo').innerHTML = `<div style="text-align: right;"><strong style="font-size: 14px;">${u.display_name}</strong><div class="tiny">${u.email}</div></div>`;
+    $('btnLogout').style.display = 'inline-flex';
+  } else {
+    localStorage.removeItem('sh_user'); localStorage.removeItem('sh_token');
+    $('userInfo').innerHTML = `<span class="tiny">Not signed in</span>`;
+    $('btnLogout').style.display = 'none';
+  }
+}
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+}
+
+async function loadSubjects() {
+  try {
+    const resp = await fetch(API + '/subjects');
+    const subs = await resp.json();
+    const sg = $('group_subject'); const ss = $('search_subject');
+    sg.innerHTML = ''; ss.innerHTML = '<option value="">Any Subject</option>';
+    subs.forEach(s => {
+      const o = document.createElement('option'); o.value = s.id; o.textContent = s.name;
+      sg.appendChild(o);
+      const o2 = o.cloneNode(true); ss.appendChild(o2);
+    });
+  } catch (e) {
+    toast('BACKEND OFFLINE');
+  }
+}
+
+$('btnFillDemo').addEventListener('click', () => {
+  $('reg_name').value = 'DemoUser'; $('reg_email').value = `demo${Math.floor(Math.random() * 999)}@example.com`; $('reg_pass').value = '123456';
+});
+
+$('btnRegister').addEventListener('click', async () => {
+  const display_name = $('reg_name').value.trim();
+  const email = $('reg_email').value.trim();
+  const password = $('reg_pass').value;
+  if (!display_name || !email || !password) return toast('All fields required');
+  try {
+    const r = await fetch(API + '/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ display_name, email, password }) });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || 'ERROR');
+    setAuth(j.user, j.token);
+    toast('Welcome, ' + j.user.display_name);
+  } catch (e) { toast('Register failed'); }
+});
+
+$('btnLogin').addEventListener('click', async () => {
+  const email = $('log_email').value.trim();
+  const password = $('log_pass').value;
+  if (!email || !password) return toast('Email/Password required');
+  try {
+    const r = await fetch(API + '/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || 'ERROR');
+    setAuth(j.user, j.token);
+    toast('Signed In: ' + j.user.display_name);
+  } catch (e) { toast('Login failed'); }
+});
+
+$('btnLogout').addEventListener('click', () => { setAuth(null, ''); toast('Logged out'); });
+
+$('btnCreateGroup').addEventListener('click', async () => {
+  if (!token) return toast('Sign in first');
+  const payload = {
+    title: $('group_title').value.trim(),
+    subject_id: parseInt($('group_subject').value),
+    description: $('group_description').value.trim(),
+    level: $('group_level').value,
+    max_members: parseInt($('group_max').value) || 6
+  };
+  if (!payload.title) return toast('Group title required');
+  try {
+    const r = await fetch(API + '/groups', { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || 'ERROR');
+    toast('Group created!');
+    $('group_title').value = ''; $('group_description').value = '';
+  } catch (e) { toast('Create failed'); }
+});
+
+$('btnSearch').addEventListener('click', async () => {
+  if (!token) return toast('Sign in first');
+  const type = $('search_type').value;
+  const subject_id = $('search_subject').value;
+  const level = $('search_level').value;
+  const q = new URLSearchParams({ subject_id, level });
+  try {
+    const r = await fetch(`${API}/match?${q.toString()}&type=${type}`, { headers: authHeaders() });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || 'ERROR');
+    renderResults(j, type);
+  } catch (e) { toast('Search failed'); }
+});
+
+function renderResults(rows, type) {
+  const container = $('results');
+  container.innerHTML = '';
+  $('resultsCount').innerText = rows.length;
+  if (!rows.length) {
+    container.innerHTML = '<div class="card" style="box-shadow: none;"><div class="muted">No results found.</div></div>';
+    return;
+  }
+  rows.forEach(r => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    if (type === 'group') {
+      c.innerHTML = `<h3>${escapeHtml(r.title)}</h3>
+        <div class="meta">${escapeHtml(r.subject_name || 'N/A')} • ${escapeHtml(r.level || 'mixed')}</div>
+        <div class="desc">${escapeHtml(r.description || '')}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+          <div class="tiny">${r.member_count || 0} / ${r.max_members || '∞'} MEMBERS</div>
+          <button class="btn secondary" style="padding: 6px 12px; --shadow-offset: 3px;" data-join="${r.id}">Join</button>
+        </div>`;
+      c.querySelector('[data-join]').addEventListener('click', (e) => { e.stopPropagation(); joinGroup(r.id); });
+    } else {
+      c.innerHTML = `<h3>${escapeHtml(r.display_name)}</h3>
+        <div class="meta">${escapeHtml(r.subject_name || 'N/A')} • ${escapeHtml(r.level || 'mixed')}</div>
+        <div class="desc">${escapeHtml(r.bio || 'No bio.')}</div>`;
+    }
+    container.appendChild(c);
+  });
+}
+
+async function joinGroup(id) {
+  if (!token) return toast('Sign in first');
+  try {
+    const r = await fetch(API + '/groups/' + id + '/join', { method: 'POST', headers: authHeaders() });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || 'ERROR');
+    toast('Joined group!');
+    $('btnSearch').click();
+  } catch (e) { toast('Join failed'); }
+}
+
+function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]); }
+
+/* initial */
+setAuth(user, token);
+loadSubjects();
+
+setTimeout(() => { if ($('search_subject').value) $('btnSearch').click(); }, 400);
+
 </script>
 </body>
 </html>
