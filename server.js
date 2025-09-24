@@ -42,7 +42,12 @@ app.get('/', (req, res) => {
 });
 
 // Serve static files from frontend folder and root
-app.use(express.static('frontend'));
+// aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 app.use(express.static('.'));
 
 // Serve index.html for root route
