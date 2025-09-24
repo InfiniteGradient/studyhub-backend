@@ -12,14 +12,13 @@ app.use(cors());
 app.use(express.json());
 
 // PostgreSQL connection
-const pool = new Pool({
-  host: process.env.DB_HOST || '127.0.0.1',
-  port: +process.env.DB_PORT || 5432,
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASS || '',
-  database: process.env.DB_NAME || 'studyhub',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+// --- START: REPLACE YOUR OLD CORS LINE WITH THIS BLOCK ---
+const corsOptions = {
+  origin: 'https://studyhub-backend-2.onrender.com',
+  optionsSuccessStatus: 200 // For legacy browser support
+};
+app.use(cors(corsOptions));
+// --- END: REPLACEMENT BLOCK ---
 
 // Serve static files from frontend folder
 app.use(express.static(path.join(__dirname, 'frontend')));
