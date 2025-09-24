@@ -19,9 +19,7 @@ app.use(express.json());
 // --- Database Connection ---
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false }
 });
 
 // --- Static Frontend Serving ---
@@ -30,7 +28,11 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 // --- JWT Helper ---
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
 function makeToken(user) {
-  return jwt.sign({ id: user.id, email: user.email, display_name: user.display_name }, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign(
+    { id: user.id, email: user.email, display_name: user.display_name },
+    JWT_SECRET,
+    { expiresIn: '7d' }
+  );
 }
 
 // --- Auth Middleware ---
@@ -58,6 +60,7 @@ app.post('/api/register', async (req, res) => {
   try {
     const existResult = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existResult.rows.length > 0) return res.status(409).json({ error: 'Email already in use' });
+
     const hash = await bcrypt.hash(password, 10);
     const result = await pool.query(
       'INSERT INTO users (email, password_hash, display_name) VALUES ($1, $2, $3) RETURNING id, email, display_name',
@@ -150,10 +153,8 @@ app.post('/api/groups', authMiddleware, async (req, res) => {
        RETURNING *`,
       [title, subject_id, description || null, req.user.id, level || 'mixed', max_members || 10]
     );
-
     const group = result.rows[0];
 
-    // Add creator as owner
     await pool.query(
       `INSERT INTO group_members (group_id, user_id, role) VALUES ($1, $2, 'owner')`,
       [group.id, req.user.id]
@@ -220,6 +221,38 @@ app.get('/api/groups/:id/members', async (req, res) => {
   } catch (error) {
     console.error('Get group members error:', error);
     res.status(500).json({ error: 'Failed to fetch group members' });
+  }
+});
+
+// --- Match groups by filters ---
+app.get('/api/match', async (req, res) => {
+  const { subject_id, level, type } = req.query;
+
+  try {
+    let query = `SELECT g.*, u.display_name AS owner_name, s.name AS subject_name
+                 FROM groups g
+                 LEFT JOIN users u ON g.owner_id = u.id
+                 LEFT JOIN subjects s ON g.subject_id = s.id
+                 WHERE 1=1`;
+    const params = [];
+
+    if (subject_id) {
+      params.push(subject_id);
+      query += ` AND g.subject_id = $${params.length}`;
+    }
+    if (level) {
+      params.push(level);
+      query += ` AND g.level = $${params.length}`;
+    }
+    // type is ignored for now, you can filter by type if you want
+
+    query += ` ORDER BY g.created_at DESC`;
+
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Match groups error:', error);
+    res.status(500).json({ error: 'Failed to match groups' });
   }
 });
 
